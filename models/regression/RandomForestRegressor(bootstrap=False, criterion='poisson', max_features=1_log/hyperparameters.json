@@ -1,0 +1,1 @@
+{"n_estimators": 50, "criterion": "poisson", "bootstrap": true, "max_features": 10}

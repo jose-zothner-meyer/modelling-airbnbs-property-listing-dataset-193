@@ -1,0 +1,1 @@
+{"criterion": "absolute_error", "splitter": "random", "max_features": 10}
