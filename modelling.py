@@ -1,3 +1,5 @@
+from scipy.stats import boxcox
+
 import itertools  # Provides functions for creating and working with iterators, e.g. product
 import json       # Allows reading/writing data in JSON format
 import math       # Provides mathematical functions such as sqrt
@@ -5,6 +7,7 @@ import os         # Offers a way of using operating system dependent functionali
 import pandas as pd  # Used for data manipulation in DataFrame structures
 import joblib         # Enables saving/loading Python objects to disk
 import numpy as np    # Fundamental numerical computing package
+
 from joblib import load  # A function from the joblib library to load saved models
 from sklearn import metrics  # Provides various machine learning evaluation metrics
 from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor # Two tree-based ensemble models for regression: GradientBoostingRegressor and RandomForestRegressor
@@ -25,11 +28,22 @@ def import_and_standarised_data(data_file: str) -> Tuple[pd.DataFrame, pd.Series
     """
 
     # 1. Read CSV into a pandas DataFrame
-    df = pd.read_csv(data_file)
+    df = pd.read_csv(data_file)  # Load the data from the CSV file into a DataFrame
+
+    # List of continuous columns to apply Box-Cox transformation
+    continuous_columns = [
+        "Price_Night", "Cleanliness_rating",
+        "Accuracy_rating", "Communication_rating", "Location_rating",
+        "Check-in_rating", "Value_rating", "amenities_count"
+    ]
+
+    # Apply Box-Cox transformation to each continuous column
+    for column in continuous_columns:
+        df[column], _ = boxcox(df[column])  # Apply Box-Cox transformation directly to the column
     
     # 2. Pass the DataFrame to load_airbnb (which returns (features, labels))
     X, y = load_airbnb(df)
-
+    
     # 3. Select only numeric columns from X for standardization
     numeric_columns = X.select_dtypes(include=[np.number])
 
@@ -455,10 +469,10 @@ hyperparameters_dict = [
     {  # Hyperparameters for SGDRegressor
         'loss': ['squared_error', 'huber', 'squared_epsilon_insensitive'],
         'penalty': ['l2', 'l1', 'elasticnet'],
-        'alpha': [0.0001, 0.001],
+        'alpha': [0.00001, 0.0001, 0.000001],
         'l1_ratio': [0.15, 0.2],
         'fit_intercept': [True, False],
-        'max_iter': [1000, 2000, 5000, 10000],
+        'max_iter': [10000, 40000, 70000, 1000000, 10000000],
         'tol': [1e-3, 1e-4, 1e-5],
         'shuffle': [True, False],
         'early_stopping': [True, False]

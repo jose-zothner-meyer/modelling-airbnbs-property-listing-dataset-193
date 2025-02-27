@@ -1,0 +1,1 @@
+{"loss": "huber", "penalty": "l2", "alpha": 1e-05, "l1_ratio": 0.15, "fit_intercept": true, "max_iter": 40000, "tol": 1e-05, "shuffle": true, "early_stopping": true}

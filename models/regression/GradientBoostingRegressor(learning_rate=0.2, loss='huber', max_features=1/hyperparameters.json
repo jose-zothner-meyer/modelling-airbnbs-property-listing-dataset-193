@@ -1,1 +1,0 @@
-{"loss": "huber", "learning_rate": 0.2, "n_estimators": 50, "criterion": "squared_error", "max_features": 10}
